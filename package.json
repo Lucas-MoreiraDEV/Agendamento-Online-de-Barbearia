@@ -1,0 +1,34 @@
+{
+  "name": "agendamento-barbearia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node server.js",
+  "type": "module",
+  "scripts": {  
+    "dev": "node --watch src/app.js",
+    "start": "node src/app.js",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:studio": "prisma studio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lucas-MoreiraDEV/Agendamento-Online-de-Barbearia.git"
+  },
+  "author": "Lucas KDev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lucas-MoreiraDEV/Agendamento-Online-de-Barbearia/issues"
+  },
+  "homepage": "https://github.com/Lucas-MoreiraDEV/Agendamento-Online-de-Barbearia#readme",
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "dotenv": "^16.4.5",
+    "node": "20.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0"
+  }
+}

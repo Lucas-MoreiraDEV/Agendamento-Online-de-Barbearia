@@ -1,0 +1,104 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header {
+  text-align: center;
+  padding: 60px 0 40px;
+  background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+}
+
+.logo {
+  max-width: 280px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  color: #d4af37;
+  letter-spacing: 1px;
+}
+
+.form-agendamento {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  margin: 20px 0 60px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #bbb;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+  font-size: 1rem;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: #d4af37;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: #e6c567;
+  transform: translateY(-2px);
+}
+
+.mensagem {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+footer {
+  text-align: center;
+  padding: 40px 0;
+  color: #777;
+  font-size: 0.9rem;
+  border-top: 1px solid #222;
+}

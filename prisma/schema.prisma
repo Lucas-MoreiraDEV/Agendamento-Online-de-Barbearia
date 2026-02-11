@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  // Se quiser output customizado (opcional, pode deixar padrão)
+  // output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Barbeiro {
+  id           Int          @id @default(autoincrement())
+  nome         String       @unique
+  agendamentos Agendamento[]
+}
+
+model Servico {
+  id           Int          @id @default(autoincrement())
+  nome         String
+  preco        Decimal      @db.Decimal(10, 2)
+  duracao      Int          // duração em minutos
+  agendamentos Agendamento[]
+}
+
+model Agendamento {
+  id         Int      @id @default(autoincrement())
+  telefone   String
+  data       DateTime // data + horário (ex: 2026-02-15T14:30:00Z)
+  barbeiro   Barbeiro @relation(fields: [barbeiroId], references: [id])
+  barbeiroId Int
+  servico    Servico  @relation(fields: [servicoId], references: [id])
+  servicoId  Int
+
+  criadoEm   DateTime @default(now())
+
+  @@index([data, barbeiroId])  // otimiza consultas de horários ocupados por barbeiro
+  @@map("agendamentos")
+}
