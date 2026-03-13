@@ -1,0 +1,24 @@
+/* Botões */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--accent-gold); color: var(--navy-darker); }
+.btn-primary:hover { opacity: 0.92; box-shadow: 0 6px 15px rgba(197,168,128,0.25); }
+.btn-outline { border: 1px solid var(--accent-gold); color: var(--accent-gold); background: transparent; }
+.btn-outline:hover { background: rgba(197,168,128,0.1); }
+
+.action-btn {
+  background: none;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.action-btn.edit { color: var(--accent-gold); }
+.action-btn.edit:hover { color: #d4af37; }
+.action-btn.cancel { color: var(--red-status); }
+.action-btn.cancel:hover { color: #c82333; }

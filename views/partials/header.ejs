@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HOUSE Admin • Salão & Barbearia</title>
+  
+  <!-- Fontes -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/events.css">
+</head>
+<body>
+
+  <!-- Overlay para fechar sidebar em mobile -->
+  <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div>
+        <h1 class="logo-title">HOUSE</h1>
+        <p class="logo-subtitle">Admin • Salão & Barbearia</p>
+      </div>
+      <button class="close-btn" onclick="toggleSidebar()">×</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="/admin" class="nav-link active">
+        <span class="nav-icon">✂️</span> Agendamentos
+      </a>
+      <a href="/admin/barbeiros" class="nav-link">
+        <span class="nav-icon">👨‍🦰</span> Barbeiros
+      </a>
+      <a href="/admin/servicos" class="nav-link">
+        <span class="nav-icon">💈</span> Serviços
+      </a>
+    </nav>
+  </aside>
+
+  <!-- O conteúdo principal (main) vem depois, no arquivo que inclui este header -->

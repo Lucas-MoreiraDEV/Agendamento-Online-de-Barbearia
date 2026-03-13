@@ -1,0 +1,123 @@
+<%- include("../partials/header.ejs") %>
+
+<!-- Conteúdo Principal - Barbeiros -->
+<main>
+
+  <!-- Header da página -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <h2 class="page-title">Gerenciar Barbeiros</h2>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="abrirModal('modal-novo-barbeiro')">
+        + Novo Barbeiro
+      </button>
+    </div>
+  </header>
+
+  <!-- Card da Lista de Barbeiros -->
+  <section class="card barbeiros-card">
+    <div class="card-header">
+      <h3 class="card-title">Lista de Barbeiros</h3>
+    </div>
+
+    <div class="table-container">
+      <table class="barbeiros-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Ativo</th>
+            <th>Foto</th>
+            <th>Horários</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop EJS - substitua pelos dados reais do controller -->
+          <% barbeiros.forEach(barbeiro => { %>
+            <tr>
+              <td><%= barbeiro.id %></td>
+              <td><%= barbeiro.nome %></td>
+              <td>
+                <span class="status-badge <%= barbeiro.ativo ? 'success' : 'inactive' %>">
+                  <%= barbeiro.ativo ? 'Ativo' : 'Inativo' %>
+                </span>
+              </td>
+              <td>
+                <% if (barbeiro.foto_url) { %>
+                  <img src="<%= barbeiro.foto_url %>" alt="<%= barbeiro.nome %>" class="barbeiro-foto">
+                <% } else { %>
+                  <span class="no-foto">Sem foto</span>
+                <% } %>
+              </td>
+              <td>
+                <pre class="horarios-json"><%= JSON.stringify(barbeiro.horarios_trabalho, null, 2) %></pre>
+              </td>
+              <td>
+                <button class="action-btn edit">Editar</button>
+                <button class="action-btn delete">Excluir</button>
+              </td>
+            </tr>
+          <% }) %>
+
+          <!-- Caso não tenha barbeiros -->
+          <% if (barbeiros.length === 0) { %>
+            <tr>
+              <td colspan="6" class="no-data">Nenhum barbeiro cadastrado ainda.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- Modal Novo Barbeiro -->
+<div id="modal-novo-barbeiro" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Novo Barbeiro</h3>
+      <button type="button" class="modal-close" onclick="fecharModal('modal-novo-barbeiro')">×</button>
+    </div>
+
+    <form id="form-novo-barbeiro" class="modal-form" method="POST" action="/admin/barbeiros">
+      <div class="form-group">
+        <label for="nome">Nome Completo</label>
+        <input type="text" name="nome" id="nome" required placeholder="Ex: João Silva">
+      </div>
+
+      <div class="form-group">
+        <label for="ativo">Status</label>
+        <select name="ativo" id="ativo" required>
+          <option value="true">Ativo</option>
+          <option value="false">Inativo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="foto_url">URL da Foto (opcional)</label>
+        <input type="url" name="foto_url" id="foto_url" placeholder="https://exemplo.com/foto.jpg">
+      </div>
+
+      <div class="form-group">
+        <label>Horários de Trabalho (JSON)</label>
+        <textarea name="horarios_trabalho" rows="6" placeholder='{"seg": "09:00-18:00", "ter": "09:00-18:00"}'></textarea>
+        <small>Formato: {"dia": "horario-inicio-horario-fim"}</small>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="fecharModal('modal-novo-barbeiro')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Barbeiro</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+<%- include("../partials/footer.ejs") %>

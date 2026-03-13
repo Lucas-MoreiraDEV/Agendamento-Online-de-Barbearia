@@ -1,0 +1,102 @@
+<%- include("../partials/header.ejs") %>
+
+<!-- Conteúdo Principal - Barbeiros -->
+<main>
+
+  <!-- Header da página -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <h2 class="page-title">Gerenciar Serviços</h2>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="abrirModal('modal-novo-servico')">
+        + Novo Serviço
+      </button>
+    </div>
+  </header>
+
+  <!-- Card da Lista de Serviços -->
+  <section class="card servicos-card">
+    <div class="card-header">
+      <h3 class="card-title">Lista de Serviços</h3>
+    </div>
+
+    <div class="table-container">
+      <table class="servicos-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Duração</th>
+            <th>Preço</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop EJS - substitua pelos dados reais do controller -->
+          <% servicos.forEach(servico => { %>
+            <tr>
+              <td><%= servico.id %></td>
+              <td><%= servico.nome %></td>
+              <td><%= servico.duracao_min %> min</td>
+              <td>R$ <%= servico.preco %></td>
+                </span>
+              </td>
+              <td>
+                <pre class="horarios-json"><%= JSON.stringify(servico.horarios_trabalho, null, 2) %></pre>
+              </td>
+              <td>
+                <button class="action-btn edit">Editar</button>
+                <button class="action-btn delete">Excluir</button>
+              </td>
+            </tr>
+          <% }) %>
+
+          <!-- Caso não tenha serviços -->
+          <% if (servicos.length === 0) { %>
+            <tr>
+              <td colspan="6" class="no-data">Nenhum serviço cadastrado ainda.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- Modal Novo Servico -->
+<div id="modal-novo-servico" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Novo Serviço</h3>
+      <button type="button" class="modal-close" onclick="fecharModal('modal-novo-servico')">×</button>
+    </div>
+
+    <form id="form-novo-servico" class="modal-form" method="POST" action="/admin/servicos">
+      <div class="form-group">
+        <label for="nome">Nome do Serviço</label>
+        <input type="text" name="nome" id="nome" required placeholder="Ex: Corte Simples">
+      </div>
+
+      <div class="form-group">
+        <label for="duracao_min">Duração (minutos)</label>
+        <input type="number" name="duracao_min" id="duracao_min" required placeholder="Ex: 30">
+      </div>
+
+      <div class="form-group">
+        <label for="preco">Preço (R$)</label>
+        <input type="number" name="preco" id="preco" required placeholder="Ex: 45.00">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="fecharModal('modal-novo-servico')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Serviço</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<%- include("../partials/footer.ejs") %>
