@@ -1,0 +1,224 @@
+<%- include("partials/header.ejs") %>
+
+<!-- Conteúdo Principal - Apenas Agenda do Dia -->
+<main>
+
+  <!-- Header da página -->
+  <header class="page-header">
+    <div class="header-left">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
+      <h2 class="page-title">Agendamentos</h2>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary">+ Novo Agendamento</button>
+      <button class="btn btn-outline">Exportar PDF</button>
+    </div>
+  </header>
+
+  <!-- Card da Agenda -->
+  <section class="card agenda-card">
+    <div class="agenda-header">
+      <h3 class="agenda-title">
+        Agenda • <%= new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+      </h3>
+    </div>
+
+    <div class="table-container">
+      <table class="agenda-table">
+        <thead>
+          <tr>
+            <th>Horário</th>
+            <th>Cliente</th>
+            <th class="hidden-tablet">Barbeiro</th>
+            <th>Serviço</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Exemplo de linha – substitua pelo loop real do controller -->
+          <% if (agendamentos.length > 0) { %>
+            <% agendamentos.forEach(agendamento => { %>
+              <tr>
+                <td><%= agendamento.horario %></td>
+                <td><%= agendamento.nome_cliente %></td>
+                <td class="hidden-tablet"><%= agendamento.nome_barbeiro %></td>
+                <td><%= agendamento.nome_servico %></td>
+                <td><span class="status-badge success">Confirmado</span></td>
+                <td>
+                  <button class="action-btn edit">Editar</button>
+                  <button class="action-btn cancel" onclick="abrirModalExcluir(<%= agendamento.id %>, this)">Cancelar</button>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <div class="no-data">Nenhuma agenda marcada para hoje.</div>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- aba/modal Novo Agendamento -->
+<div id="modal-novo-agendamento" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Novo Agendamento</h3>
+      <button type="button" class="modal-close" onclick="fecharModal()">×</button>
+    </div>
+
+    <form id="form-novo-agendamento" class="modal-form" method="POST" action="/admin/agendamentos">
+      <div class="form-group">
+        <label for="cliente">Cliente</label>
+        <input type="text" name="cliente" id="cliente" required placeholder="Nome do cliente">
+      </div>
+        <div class="form-group">
+        <label for="telefone">Telefone</label>
+        <input type="text" name="telefone" id="telefone" required placeholder="(11) 99999-9999">
+      </div>
+      
+      <div class="form-group">
+        <label for="servico">Serviço</label>
+        <select name="servicos_id" id="servico" onchange="carregarHorarios()" required>
+          <% if (servicos && servicos.length > 0) { %>
+            <option value="">Selecione o serviço</option>
+            <% servicos.forEach(servico => { %>
+              <option value="<%= servico.id %>"><%= servico.nome %></option>
+            <% }) %>
+          <% } else { %>
+            <option value="">Nenhum serviço disponível</option>
+          <% } %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="data">Data</label>
+        <input type="date" name="data" id="data" onchange="carregarHorarios()" required>
+      </div>
+      
+      <div class="form-group">  
+        <label for="barbeiro">Barbeiro</label>
+        <select name="barbeiros_id" id="barbeiro" onchange="carregarHorarios()" required>
+          <option value="">Selecione o barbeiro</option>
+
+          <% if (barbeiros && barbeiros.length > 0) { %>
+            <% barbeiros.forEach(barbeiro => { %>
+              <option value="<%= barbeiro.id %>"><%= barbeiro.nome %></option>
+            <% }) %>
+          <% } else { %>
+            <option value="">Nenhum barbeiro disponível</option>
+          <% } %>
+              
+        </select>
+      </div>
+      
+      
+      <div class="form-group">
+        <label for="horario">Horário</label>
+        <select name="horario" id="horario" required>
+          <option value="" id="opcao1">Selecione um horário</option>
+          <!-- Horários disponíveis serão preenchidos dinamicamente via JavaScript -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="observacoes">Observações</label>
+        <textarea name="observacoes" id="observacoes" rows="2"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="fecharModal('modal-novo-agendamento')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Confirmar Agendamento</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div id="modal-excluir" class="modal-overlay">
+  <div class="modal-content small">
+    <h3>Cancelar Agendamento</h3>
+    <p>Deseja realmente cancelar este agendamento?</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="fecharModalExcluir()">Voltar</button>
+      <button class="btn btn-primary" onclick="confirmarExcluir()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+const servicos = <%- JSON.stringify(servicos) %>;
+
+async function carregarHorarios(){
+
+    const barbeiroId = document.getElementById("barbeiro").value;
+    const data = document.getElementById("data").value;
+    const servicoId = document.getElementById("servico").value;
+
+    const servico = servicos.find(s => s.id == servicoId);
+    const duracao = servico?.duracao || 0;
+
+    if(!barbeiroId || !data || !servicoId) {
+      return;
+    } else {
+
+    const res = await fetch(`/api/horarios?barbeiroId=${barbeiroId}&data=${data}&duracao=${duracao}`);
+    const horarios = await res.json();
+
+    //adicionar opções de horário
+    const selectHorario = document.getElementById("horario");
+    selectHorario.innerHTML = '<option value="">Selecione um horário</option>';
+    horarios.forEach(horario => {
+        const option = document.createElement("option");
+        option.value = horario;
+        option.textContent = horario;
+        selectHorario.appendChild(option);
+    });
+    }
+}
+
+
+let agendamentoId = null;
+let linhaTabela = null;
+
+function abrirModalExcluir(id, botao){
+    agendamentoId = id;
+    linhaTabela = botao.closest("tr");
+    document.getElementById("modal-excluir").style.display = "flex";
+}
+
+function fecharModalExcluir(){
+    document.getElementById("modal-excluir").style.display = "none";
+}
+
+async function confirmarExcluir(){
+
+    const res = await fetch(`/admin/agendamentos/${agendamentoId}`, {
+        method: "DELETE"
+    });
+
+    if(res.ok){
+
+        linhaTabela.remove(); // remove da tabela
+
+        fecharModalExcluir();
+
+    } else {
+        console.error("Erro ao excluir");
+    }
+
+}
+
+
+</script>
+
+
+
+<%- include("partials/footer.ejs") %>
